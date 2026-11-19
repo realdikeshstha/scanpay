@@ -1,0 +1,9 @@
+.git
+build
+build-*
+.scratch
+certs
+logs
+.env
+*.pdf
+.DS_Store

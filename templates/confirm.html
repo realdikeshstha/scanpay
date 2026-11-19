@@ -1,0 +1,19 @@
+{{> _header.html}}
+<section class="card narrow">
+  <h1>Confirm payment</h1>
+  <dl class="summary">
+    <dt>To</dt><dd>{{payee}}</dd>
+    <dt>Amount</dt><dd class="big">{{amount}}</dd>
+    <dt>Method</dt><dd>{{#is_qr}}Merchant QR code{{/is_qr}}{{^is_qr}}Phone transfer{{/is_qr}}</dd>
+  </dl>
+  <p class="muted small">This authorization is valid for 2 minutes and can be used once
+    (<span id="seconds-left" data-seconds="{{seconds_left}}">{{seconds_left}}</span> seconds left).</p>
+  <form method="post" action="/pay/confirm">
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+    <input type="hidden" name="authorization_id" value="{{authorization_id}}">
+    <button type="submit">Pay {{amount}}</button>
+  </form>
+  <p><a href="/">Cancel</a></p>
+</section>
+<script src="/static/js/countdown.js"></script>
+{{> _footer.html}}

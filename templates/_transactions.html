@@ -1,0 +1,13 @@
+{{#has_transactions}}
+<ul class="txns">
+  {{#transactions}}
+  <li>
+    <a href="/receipts/{{id}}">
+      <span class="who">{{counterparty}}<small>{{kind}} &middot; {{created_at}}</small></span>
+      <span class="amt {{#outgoing}}out{{/outgoing}}">{{amount}}</span>
+    </a>
+  </li>
+  {{/transactions}}
+</ul>
+{{/has_transactions}}
+{{^has_transactions}}<p class="muted">No transactions yet.</p>{{/has_transactions}}

@@ -1,0 +1,17 @@
+{{> _header.html}}
+<section class="card narrow receipt">
+  <h1>{{#outgoing}}Payment sent{{/outgoing}}{{^outgoing}}Payment received{{/outgoing}}</h1>
+  <p class="big">{{amount}}</p>
+  <dl class="summary">
+    <dt>{{#outgoing}}To{{/outgoing}}{{^outgoing}}From{{/outgoing}}</dt><dd>{{counterparty}}</dd>
+    <dt>Method</dt><dd>{{kind}}</dd>
+    <dt>Date</dt><dd>{{created_at}}</dd>
+    <dt>Receipt</dt><dd>#{{receipt_id}}</dd>
+    <dt>Reference</dt><dd class="mono">{{reference}}</dd>
+  </dl>
+  <div class="actions">
+    <a class="button" href="/">Done</a>
+    <a class="button secondary" href="/history">History</a>
+  </div>
+</section>
+{{> _footer.html}}

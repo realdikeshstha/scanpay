@@ -1,0 +1,21 @@
+# Build output
+build/
+build-*/
+cmake-build-*/
+.scratch/
+
+# Secrets and local config
+.env
+certs/
+*.pem
+*.key
+*.crt
+
+# Logs
+logs/
+*.log
+
+# Editors / OS
+.DS_Store
+.vscode/
+.idea/

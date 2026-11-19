@@ -1,0 +1,71 @@
+# ScanPay: PostgreSQL + the C++ app over HTTPS on https://localhost:8443
+#
+#   ./scripts/make-env.sh          # once: writes .env with random secrets
+#   docker compose up --build      # (or docker-compose up --build)
+#   docker compose --profile test run --rm tests   # full CTest suite in Docker
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: scanpay
+      POSTGRES_USER: scanpay_owner
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      SCANPAY_DB_APP_PASSWORD: ${SCANPAY_DB_APP_PASSWORD:?set SCANPAY_DB_APP_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - ./db/schema.sql:/scanpay-db/schema.sql:ro
+      - ./db/grants.sql:/scanpay-db/grants.sql:ro
+    # No published port: only the app container can reach the database.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scanpay_owner -d scanpay"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      target: runtime
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://scanpay_app:${SCANPAY_DB_APP_PASSWORD}@db:5432/scanpay
+      SCANPAY_QR_KEY: ${SCANPAY_QR_KEY:?set SCANPAY_QR_KEY in .env}
+      SCANPAY_TLS_CERT: /app/certs/cert.pem
+      SCANPAY_TLS_KEY: /app/certs/key.pem
+      SCANPAY_CERT_SAN: ${SCANPAY_CERT_SAN:-}
+      SCANPAY_SECURITY_LOG: /app/logs/security.log
+    ports:
+      - "8443:8443"
+    volumes:
+      - logs:/app/logs
+    tmpfs:
+      - /app/certs:uid=10001,gid=10001,mode=0700
+      - /tmp
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  tests:
+    profiles: ["test"]
+    build:
+      context: .
+      target: build
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SCANPAY_TEST_DATABASE_URL: postgresql://scanpay_owner:${POSTGRES_PASSWORD}@db:5432/scanpay_test
+      SCANPAY_TEST_APP_DATABASE_URL: postgresql://scanpay_app:${SCANPAY_DB_APP_PASSWORD}@db:5432/scanpay_test
+    working_dir: /src/build
+    command: ["ctest", "--output-on-failure"]
+
+volumes:
+  pgdata:
+  logs:

@@ -1,0 +1,18 @@
+{{> _header.html}}
+<section class="card balance">
+  <p class="muted">Hello, {{user_name}}</p>
+  <p class="big">{{balance}}</p>
+  <p class="muted small">Available balance &middot; {{phone}}</p>
+  <div class="actions">
+    <a class="button" href="/scan">Scan to pay</a>
+    <a class="button secondary" href="/transfer">Send by phone</a>
+    {{#is_merchant}}<a class="button secondary" href="/merchant/qr">My QR code</a>{{/is_merchant}}
+  </div>
+</section>
+
+<section class="card">
+  <h2>Recent activity</h2>
+  {{> _transactions.html}}
+  <p><a href="/history">View full history</a></p>
+</section>
+{{> _footer.html}}

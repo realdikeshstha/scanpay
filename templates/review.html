@@ -1,0 +1,21 @@
+{{> _header.html}}
+<section class="card narrow">
+  <h1>Review payment</h1>
+  <div class="merchant">
+    <p class="muted small">You are paying</p>
+    <p class="merchant-name">{{merchant_name}}</p>
+    <p class="muted small">Verified ScanPay merchant. Make sure this matches the business in front of you.</p>
+  </div>
+  {{#error}}<p class="alert" role="alert">{{error}}</p>{{/error}}
+  <form method="post" action="/pay/authorize">
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+    <input type="hidden" name="qr" value="{{qr}}">
+    <label>Amount (USD)
+      <input name="amount" type="text" inputmode="decimal" maxlength="10" pattern="[0-9]{1,6}(\.[0-9]{1,2})?"
+             placeholder="0.00" value="{{amount}}" required autofocus>
+    </label>
+    <p class="muted small">Between $0.01 and $500.00.</p>
+    <button type="submit">Continue</button>
+  </form>
+</section>
+{{> _footer.html}}

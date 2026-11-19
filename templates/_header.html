@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}} - ScanPay</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">Scan<span>Pay</span></a>
+  {{#logged_in}}
+  <nav>
+    <a href="/scan">Scan</a>
+    <a href="/transfer">Send</a>
+    <a href="/history">History</a>
+    {{#is_merchant}}<a href="/merchant/qr">My QR</a>{{/is_merchant}}
+    <form method="post" action="/logout" class="inline">
+      <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+      <button type="submit" class="link">Sign out</button>
+    </form>
+  </nav>
+  {{/logged_in}}
+</header>
+<main>

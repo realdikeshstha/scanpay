@@ -1,0 +1,19 @@
+{{> _header.html}}
+<section class="card narrow">
+  <h1>Send money</h1>
+  {{#error}}<p class="alert" role="alert">{{error}}</p>{{/error}}
+  <form method="post" action="/transfer/authorize">
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+    <label>Recipient phone number
+      <input name="phone" type="tel" inputmode="tel" maxlength="20" placeholder="+1 555 555 0102"
+             value="{{phone}}" required>
+    </label>
+    <label>Amount (USD)
+      <input name="amount" type="text" inputmode="decimal" maxlength="10" pattern="[0-9]{1,6}(\.[0-9]{1,2})?"
+             placeholder="0.00" value="{{amount}}" required>
+    </label>
+    <p class="muted small">Between $0.01 and $500.00. You will confirm the recipient on the next screen.</p>
+    <button type="submit">Continue</button>
+  </form>
+</section>
+{{> _footer.html}}

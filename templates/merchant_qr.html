@@ -1,0 +1,11 @@
+{{> _header.html}}
+<section class="card narrow center">
+  <h1>{{merchant_name}}</h1>
+  <p class="muted">Print this code and display it at your counter. It never changes; customers enter the amount.</p>
+  <img class="qr" src="/merchant/qr.svg" alt="ScanPay QR code for {{merchant_name}}" width="280" height="280">
+  <p class="muted small">QR text (for testing without a camera):</p>
+  <p class="mono small">{{payload}}</p>
+  <p class="muted small">Always check the amount you received in your <a href="/history">history</a>;
+    the printed code does not contain a sale price.</p>
+</section>
+{{> _footer.html}}

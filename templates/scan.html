@@ -1,0 +1,29 @@
+{{> _header.html}}
+<section class="card">
+  <h1>Scan to pay</h1>
+  <p class="muted">Point your camera at a merchant's ScanPay QR code.</p>
+
+  <div class="scanner">
+    <video id="scan-video" playsinline muted></video>
+    <canvas id="scan-canvas" hidden></canvas>
+  </div>
+  <p id="scan-status" class="muted small" aria-live="polite">Starting camera...</p>
+  <div class="actions">
+    <button type="button" id="scan-start" class="secondary">Start camera</button>
+    <label class="button secondary file">Upload QR image
+      <input type="file" id="scan-file" accept="image/*" hidden>
+    </label>
+  </div>
+
+  <form method="post" action="/pay/review" id="scan-form">
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+    <label>Or paste the QR code text
+      <textarea name="qr" id="scan-qr" rows="2" maxlength="128" required
+                placeholder="scanpay:v1:..."></textarea>
+    </label>
+    <button type="submit">Continue</button>
+  </form>
+</section>
+<script src="/static/vendor/jsQR.js"></script>
+<script src="/static/js/scan.js"></script>
+{{> _footer.html}}
